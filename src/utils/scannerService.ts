@@ -1,3 +1,4 @@
+import axios from "axios";
 
 // Regular expression for EVM addresses
 const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
@@ -10,6 +11,21 @@ export const validateAddress = (address: string): boolean => {
   return EVM_ADDRESS_REGEX.test(address);
 };
 
+const API_KEY = "F23WAAZaPK5KBuTfASuGi7HpO5FKf9dH6t5yoSnJ"
+
+async function fetchTokenInfo(tokenAddress: string) {
+  try {
+    const response = await axios.get(`https://check-api.quillai.network/api/v1/tokens/information/${tokenAddress}?8453`, {
+      headers: {
+        "x-api-key": API_KEY,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error("Error fetching token information:", error);
+  }
+}
+
 /**
  * Mock function to simulate scanning a contract for trust issues
  * In a real implementation, this would call an API service
@@ -17,8 +33,8 @@ export const validateAddress = (address: string): boolean => {
 export const scanContract = async (address: string): Promise<any> => {
   console.log(`Scanning contract at address: ${address}`);
   
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  let response = await fetchTokenInfo(address);
+  console.log(response);
   
   // Generate deterministic but pseudo-random results based on address
   // This is just for demo purposes - a real implementation would use actual analysis
